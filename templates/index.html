@@ -1,0 +1,29 @@
+<html>
+   <body>
+
+      <h1> Add your Account! </h1>
+
+      <form action = "http://localhost:5000/username" method = "POST">
+         <p>Login into Leetcode Acc: <input type = "text" name = "username" /></p>
+         <p>Password: <input type = "text" name = "pw" /></p>
+         <p><input type = "submit" value = "submit" /></p>
+      </form>
+
+
+      <form action = "http://localhost:5000/question" method = "POST">
+        <p>ID <input type = "text" name = "id" /></p>
+        <p><input type = "submit" value = "submit" /></p>
+     </form>
+
+     <form action = "http://localhost:5000/list" method = "POST">
+        <p> Difficulty</p>
+        <select name="difficulty">
+           <option value="e">Easy</option>
+           <option value="m">Medium</option>
+           <option value="h">Hard</option>
+        </select>
+        <p><input type = "submit" value = "submit"/></p>
+     </form>
+     
+   </body>
+</html>
