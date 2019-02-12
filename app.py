@@ -1,12 +1,13 @@
 import datetime
 import os
-from flask import (Flask, Response, render_template, request)
+from flask import (Flask, Response, render_template, request, jsonify)
 from micawber import bootstrap_basic, parse_html
 from micawber.cache import Cache as OEmbedCache
 from peewee import *
 from playhouse.flask_utils import FlaskDB, get_object_or_404, object_list
 from playhouse.sqlite_ext import *
 import subprocess
+import leetcode
 
 # configure our database
 APP_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -44,7 +45,7 @@ def get_user():
             print(result)
             print(pw)
             
-            output = subprocess.call(["leetcode", "user", "-l", result, pw], "hello", shell=False)
+            output = subprocess.check_call(["leetcode", "user", "-l"])
             print(output)
             
             # print(proc)
@@ -77,16 +78,27 @@ def get_list():
 
     return render_template('list.html', output = output)
 
-@app.route('/question', methods = ['POST', 'GET'])
-def get_question():
-    if request.method == 'POST':
-        result = request.form.get('id')
+@app.route('/submit/<problemid>', methods = ['POST', 'GET'])
+def post_question(problemid):
+    print "SUBMITTING SOLUTION"
+    api = leetcode.LeetcodeAPI()
+    code = request.form.get('code')
+    return jsonify({
+        "result" : api.submit_solution(problemid, "py", code)
+    })
+
+@app.route('/question/<problemid>', methods = ['GET'])
+def get_question(problemid):
+    # if request.method == 'POST':
+    #     result = request.form.get('id')
     
-    output = subprocess.check_output(["leetcode", "show", result]).decode("utf-8")
+    output = subprocess.check_output(["leetcode", "show", problemid]).decode("utf-8")
     output = output.splitlines()
 
-    return render_template('list.html', output = output)
+    api = leetcode.LeetcodeAPI()
+    code = api.get_file(problemid)
 
+    return render_template('list.html', output = output, code=code, problemid=problemid)
 @app.errorhandler(404)
 def not_found(exc):
     return Response('<h3>Not found</h3>'), 404

@@ -1,15 +1,35 @@
 <!doctype <!DOCTYPE html>
 <html>
 <body>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"> </script>
     {% for i in output %}
     <p>
        {{i}}
     </p>
     {% endfor %}
-    <!-- {% for i in output %}
-    <li>
-        <ol>{{i}}</ol>
-    </li>
-    {% endfor %} -->
+
+    <pre>
+    <textarea class="code">{{code}}</textarea>
+    </pre>
+
+    <div class="submit">submit code</div>
+   
+    <script>
+    $(function() {
+        $(".submit").on("click", function() {
+
+            console.log("SUBMITTING CODE");
+            $.post({
+                url: "/submit/{{problemid}}",
+                data: {
+                    code: $(".code").val()
+                }
+            }).then(function(res) {
+                console.log("RESPONSE", res)
+            })
+        })
+
+    })
+    </script>
 </body>
 </html>
