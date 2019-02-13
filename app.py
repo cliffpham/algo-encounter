@@ -1,6 +1,6 @@
 import datetime
 import os
-from flask import (Flask, Response, render_template, request, jsonify)
+from flask import (Flask, Response, render_template, request, redirect, jsonify, url_for)
 from micawber import bootstrap_basic, parse_html
 from micawber.cache import Cache as OEmbedCache
 from peewee import *
@@ -25,6 +25,8 @@ database = flask_db.database
 
 oembed_providers = bootstrap_basic(OEmbedCache())
 
+api = leetcode.LeetcodeAPI()
+
 class User(flask_db.Model):
     username = CharField()
     password = 'default'
@@ -48,33 +50,14 @@ def get_user():
             output = subprocess.check_call(["leetcode", "user", "-l"])
             print(output)
             
-            # print(proc)
-            # print(proc.communicate(input=result))
-            # proc.communicate(input=pw)
-            # print(process)
-            # subprocess.check_output(["leetcode", "user", "-l"])
-            # subprocess.call(result, shell=True)
-            # subprocess.check_call(pw, shell=True)
-
-            # print(output)
-            # if output == 
-            # output = subprocess.check_call([result])
-            # print(output)
-            # output = subprocess.check_output([pw])
-            # print(subprocess.check_output(["leetcode", "user", "-l"]))
-            # user = User.create(
-            #     username = request.form['username']
-            # )
     return render_template('login.html')
 
 @app.route('/list', methods = ['POST', 'GET'])
 def get_list():
     if request.method == 'POST':
         result = request.form.get('difficulty')
-        print(result)
-
-    output = subprocess.check_output(["leetcode", "list", "-q", result]).decode("utf-8")
-    output = output.splitlines()
+    
+    output = api.list_problems(result)
 
     return render_template('list.html', output = output)
 
@@ -87,18 +70,25 @@ def post_question(problemid):
         "result" : api.submit_solution(problemid, "py", code)
     })
 
+@app.route('/question', methods = ['GET'])
+def question():
+
+    result = request.form.get('id')
+    
+    return redirect(url_for('localhost:5000/question/' + result))
+
+
 @app.route('/question/<problemid>', methods = ['GET'])
 def get_question(problemid):
-    # if request.method == 'POST':
-    #     result = request.form.get('id')
-    
+
     output = subprocess.check_output(["leetcode", "show", problemid]).decode("utf-8")
     output = output.splitlines()
 
     api = leetcode.LeetcodeAPI()
     code = api.get_file(problemid)
 
-    return render_template('list.html', output = output, code=code, problemid=problemid)
+    return render_template('submit.html', output = output, code=code, problemid=problemid)
+
 @app.errorhandler(404)
 def not_found(exc):
     return Response('<h3>Not found</h3>'), 404

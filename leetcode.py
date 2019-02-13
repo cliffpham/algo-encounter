@@ -38,8 +38,19 @@ class LeetcodeAPI:
 	def get_problem(self, problemid, lang="python"):
 		pass
 
-	def list_problems(self):
-		pass
+	def list_problems(self, difficulty):
+		output = run_leetcode_command(["list", "-q", difficulty]).decode("utf-8")
+		output = output.splitlines()
+		listing = {}
+
+		for v in output:
+			k = (v[v.find("[")+1:v.find("]")])
+			k = int(k)
+			k = str(k)
+
+			listing[k] = v
+		
+		return listing
 
 	def get_file(self, problemid, lang="python"):
 		problemid = str(problemid)
