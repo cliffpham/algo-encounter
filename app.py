@@ -25,11 +25,19 @@ database = flask_db.database
 
 oembed_providers = bootstrap_basic(OEmbedCache())
 
-api = leetcode.LeetcodeAPI()
+# api = leetcode.LeetcodeAPI()
 
 class User(flask_db.Model):
     username = CharField()
-    password = 'default'
+    password = CharField()
+
+    class Meta:
+        database = database
+
+class Question(flask_db.Model):
+    leetcode_id = TextField()
+    submission = TextField()
+    status = BooleanField()
 
     class Meta:
         database = database
@@ -46,9 +54,10 @@ def get_user():
             pw = request.form.get('pw')
             print(result)
             print(pw)
+            user = User.create(username=result, password=pw)
             
-            output = subprocess.check_call(["leetcode", "user", "-l"])
-            print(output)
+            # output = subprocess.check_call(["leetcode", "user", "-l"])
+            # print(output)
             
     return render_template('login.html')
 
@@ -57,6 +66,7 @@ def get_list():
     if request.method == 'POST':
         result = request.form.get('difficulty')
     
+    api = leetcode.LeetcodeAPI()
     output = api.list_problems(result)
 
     return render_template('list.html', output = output)
@@ -66,6 +76,7 @@ def post_question(problemid):
     print "SUBMITTING SOLUTION"
     api = leetcode.LeetcodeAPI()
     code = request.form.get('code')
+    # q = Question.create(submission=code)
     return jsonify({
         "result" : api.submit_solution(problemid, "py", code)
     })
@@ -94,8 +105,8 @@ def not_found(exc):
     return Response('<h3>Not found</h3>'), 404
 
 def main():
-    database.drop_tables([User])
-    database.create_tables([User])
+    database.drop_tables([User, Question])
+    database.create_tables([User, Question])
     app.run(debug=True)
 
 if __name__ == '__main__':

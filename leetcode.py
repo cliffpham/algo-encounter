@@ -1,6 +1,7 @@
 import subprocess
 import tempfile
 import os
+from app import Question
 
 
 def run_leetcode_command(cmd_args):
@@ -26,10 +27,13 @@ class LeetcodeAPI:
 			output = run_leetcode_command(["submit", fname])
 			if output.find("Accepted") != -1:
 				print "ACCEPTED", output
+				submission = Question.create(leetcode_id = problemid, submission = code, status = True)
 			elif output.find("Wrong Answer") != -1:
 				print "WRONG ANSWER", output
+				submission = Question.create(leetcode_id = problemid, submission = code, status = False)
 			else:
 				print "UNKNOWN", output
+				submission = Question.create(leetcode_id = problemid, submission = code, status = False)
 			return output
 		finally:
 			print "REMOVING", fname
