@@ -1,5 +1,6 @@
 <html>
    <body>
+      <script src="https://code.jquery.com/jquery-3.3.1.min.js"> </script>
 
       <h1> Add your Account! </h1>
 
@@ -8,12 +9,10 @@
          <p>Password: <input type = "text" name = "pw" /></p>
          <p><input type = "submit" value = "submit" /></p>
       </form>
-
-
-      <form action = "http://localhost:5000/question" method = "POST">
-        <p>ID <input type = "text" name = "id" /></p>
-        <p><input type = "submit" value = "submit" /></p>
-     </form>
+      
+      <p> Question No: <input type="text" class="id"> </input></p>
+      <p><input type = "submit" class="getQuestion" /></p>
+   
 
      <form action = "http://localhost:5000/list" method = "POST">
         <p> Difficulty</p>
@@ -24,6 +23,49 @@
         </select>
         <p><input type = "submit" value = "submit"/></p>
      </form>
+   
+     <div class="random"> Random Question </div>
+     <script>
+
+      function randomNum(n){
+         random = Math.floor(Math.random() * n) + 1
+
+         return random
+      }
+
+      $(function(){
+         //lets confirm with the backend that the question no. exists possibly otherwise this could be trouble
+         $(".getQuestion").on("click", function(){
+            id = $(".id").val()
+             
+            //take the id input and check if it is within range of all possible questions
+            var noQuestions = '{{questions}}'
+            noQuestions = parseInt(noQuestions)
+            intID = parseInt(id)
+          
+            if(intID > noQuestions || noQuestions < 0){
+               alert("Out of luck. Choose any number between 1 and {{questions}}")
+            } else {
+               window.location.href = '/question/' + id
+            }
+            //make sure that it is not a premium question
+           
+         })
+      })
+
+     $(function(){
+        $(".random").on("click", function(){
+            var noQuestions = '{{questions}}'
+            noQuestions = parseInt(noQuestions)
+            num = randomNum(noQuestions).toString()
+
+            //if question number exists redirect users to this page
+            window.location.href = '/question/' + num
+        })
+     })
+
+     </script>
+
      
    </body>
 </html>

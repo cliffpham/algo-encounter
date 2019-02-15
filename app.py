@@ -44,7 +44,10 @@ class Question(flask_db.Model):
 
 @app.route('/')
 def welcome():
-    return render_template('index.html')
+    api = leetcode.LeetcodeAPI()
+    questions = api.all_problems()
+    
+    return render_template('index.html', questions = questions)
 
 @app.route('/username', methods=['GET', 'POST'])
 def get_user():
@@ -81,12 +84,12 @@ def post_question(problemid):
         "result" : api.submit_solution(problemid, "py", code)
     })
 
-@app.route('/question', methods = ['GET'])
+@app.route('/question', methods = ['POST'])
 def question():
 
     result = request.form.get('id')
     
-    return redirect(url_for('localhost:5000/question/' + result))
+    return redirect(url_for('list'))
 
 
 @app.route('/question/<problemid>', methods = ['GET'])

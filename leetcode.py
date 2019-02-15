@@ -42,6 +42,12 @@ class LeetcodeAPI:
 	def get_problem(self, problemid, lang="python"):
 		pass
 
+	def all_problems(self):
+		output = run_leetcode_command(["list"]).decode("utf-8")
+		output = output.splitlines()
+
+		return len(output)
+
 	def list_problems(self, difficulty):
 		output = run_leetcode_command(["list", "-q", difficulty]).decode("utf-8")
 		output = output.splitlines()
@@ -56,6 +62,7 @@ class LeetcodeAPI:
 		
 		return listing
 
+	# we need to pull from the database here and get existing submission if it exists
 	def get_file(self, problemid, lang="python"):
 		problemid = str(problemid)
 		output = run_leetcode_command(["show", "-g", problemid, "-l", lang])
