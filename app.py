@@ -101,6 +101,12 @@ def get_question(problemid):
     api = leetcode.LeetcodeAPI()
     code = api.get_file(problemid)
 
+    # if user has submitted a solution to the question before, retrieve most recent submission
+    query = Question.select().where(Question.leetcode_id == problemid)
+    if query.exists():
+        code = Question.select().where(Question.leetcode_id == problemid)
+        code = code[1].submission
+
     return render_template('submit.html', output = output, code=code, problemid=problemid)
 
 @app.errorhandler(404)
