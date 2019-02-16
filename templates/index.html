@@ -56,10 +56,8 @@
      $(function(){
         $(".random").on("click", function(){
             var noQuestions = '{{questions}}'
-            noQuestions = parseInt(noQuestions)
-            num = randomNum(noQuestions).toString()
+            num = noQuestions.toString()
 
-            //if question number exists redirect users to this page
             window.location.href = '/question/' + num
         })
      })

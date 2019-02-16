@@ -2,6 +2,7 @@ import subprocess
 import tempfile
 import os
 from app import Question
+import random
 
 
 def run_leetcode_command(cmd_args):
@@ -45,21 +46,41 @@ class LeetcodeAPI:
 	def all_problems(self):
 		output = run_leetcode_command(["list"]).decode("utf-8")
 		output = output.splitlines()
+		locked_questions = []
+		
 
-		return len(output)
+		for q in output:
+			if q.find(u"\U0001F512") != -1:
+				k = (q[q.find("[")+1:q.find("]")])
+				k = int(k)
+				locked_questions.append(k)
+
+		pick_num = random.randint(1, 989)
+
+		if pick_num in locked_questions:
+			self.all_problems()
+				
+		return pick_num
 
 	def list_problems(self, difficulty):
 		output = run_leetcode_command(["list", "-q", difficulty]).decode("utf-8")
 		output = output.splitlines()
 		listing = {}
 
-		for v in output:
-			k = (v[v.find("[")+1:v.find("]")])
-			k = int(k)
-			k = str(k)
-
-			listing[k] = v
+		#extra parameters to include
+		# list -q D == all questions incompleted
 		
+		for v in output:
+			if v.find(u"\U0001F512") != -1:
+				continue
+			else:
+			#extract only the problem number
+				k = (v[v.find("[")+1:v.find("]")])
+				k = int(k)
+				k = str(k)
+
+				listing[k] = v
+	
 		return listing
 
 	# we need to pull from the database here and get existing submission if it exists
