@@ -45,7 +45,7 @@ class Question(flask_db.Model):
 @app.route('/')
 def welcome():
     api = leetcode.LeetcodeAPI()
-    questions = api.all_problems()
+    questions = api.random_problem()
     
     return render_template('index.html', questions = questions)
 
@@ -99,15 +99,22 @@ def get_question(problemid):
     output = output.splitlines()
 
     api = leetcode.LeetcodeAPI()
+    #retrieve the outline to solve the solution
     code = api.get_file(problemid)
 
     # if user has submitted a solution to the question before, retrieve most recent submission
     query = Question.select().where(Question.leetcode_id == problemid)
     if query.exists():
+        #creates something like this: <peewee.ModelSelect object at 0x10d0caf10>
         code = Question.select().where(Question.leetcode_id == problemid)
         code = code[1].submission
 
     return render_template('submit.html', output = output, code=code, problemid=problemid)
+
+
+@app.route('/board', methods=['GET'])
+def test():
+    return render_template('canvas.html')
 
 @app.errorhandler(404)
 def not_found(exc):

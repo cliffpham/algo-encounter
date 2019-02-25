@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<style>
+#canvas{
+    outline: 1px solid #000;
+    margin: auto;
+    padding: 0;
+    display: block;
+}
+</style>
+
+
+<body>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"> </script>
+    <canvas id="canvas" height="400" width="600"></canvas>
+
+
+<script>
+    // var canvas = document.querySelector('#canvas');
+    // var context = canvas.getContext('2d');
+    var canvas = $("#canvas")[0]
+    var context = $("#canvas")[0].getContext('2d')
+
+    var xPos = 275;
+    var yPos = 160;
+
+    context.rect(xPos, yPos, 50, 50)
+    context.stroke()
+
+    function move(e){
+
+        if(e.keyCode == 39){
+            xPos += 5;
+            if(xPos >= 550){
+                xPos = 550
+            }
+        }
+
+        if(e.keyCode == 37){
+            xPos -= 5;
+            if(xPos <= 0){
+                xPos = 0
+            }
+        }
+
+        if(e.keyCode == 38){
+            yPos -= 5
+            if(yPos <= 0){
+                yPos = 0
+            }
+        }
+
+        if(e.keyCode == 40){
+            yPos += 5
+            if(yPos >= 350){
+                yPos = 350
+            }
+        }
+
+        canvas.width = canvas.width;
+        context.rect(xPos, yPos, 50,50)
+        context.stroke()
+    }
+
+    // $("#canvas").keydown(function(e){
+    //     move(e)
+    // })
+
+    document.onkeydown = move
+
+</script>
+
+</body>
+</html>
