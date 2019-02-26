@@ -114,7 +114,16 @@ def get_question(problemid):
 
 @app.route('/board', methods=['GET'])
 def test():
-    return render_template('canvas.html')
+    api = leetcode.LeetcodeAPI()
+    questions = []
+    
+    for i in range(5):
+        i = api.random_problem()
+        questions.append(i)
+    
+    # print(questions)
+   
+    return render_template('canvas.html', questions = questions)
 
 @app.errorhandler(404)
 def not_found(exc):

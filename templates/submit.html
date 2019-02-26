@@ -2,20 +2,28 @@
 <html>
 <body>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"> </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.44.0/codemirror.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.44.0/codemirror.css">
+
+
     {% for i in output %}
     <p>
        {{i}}
     </p>
     {% endfor %}
 
-    <pre>
-    <textarea class="code">{{code}}</textarea>
-    </pre>
+    <!-- <pre> -->
+    <textarea id="editor">{{code}}</textarea>
+    <!-- </pre> -->
 
     <div class="submit">submit code</div>
    
     <script>
     $(function() {
+        var editor = CodeMirror.fromTextArea(document.getElementById("editor"),{
+            lineNumbers: true
+        });
+
         $(".submit").on("click", function() {
 
             console.log("SUBMITTING CODE");
