@@ -28,6 +28,55 @@
     context.rect(xPos, yPos, 50, 50)
     context.stroke()
 
+    tiles = []
+
+    for(i=0; i<5; i++){
+        x = random_tiles()
+        context.rect(x[0], x[1], 50, 50)
+        context.stroke()
+        tiles.push(x)
+    }
+
+    var questions = '{{questions}}'
+
+    questions = questions.split(' ')
+
+    questions = clean_up(questions)
+
+
+    function clean_up(arr){
+        new_arr = []
+        arr.forEach(function(item){
+            // console.log(item.replace(/\D/g, ''))
+            new_arr.push(item.replace(/\D/g, ''))
+        })
+        return new_arr
+    }
+
+    // console.log(questions)
+    
+    function check_tiles(queryX, queryY, tiles, questions){
+        r = Math.floor(Math.random() * 4)
+        num = questions[r]
+
+  
+        tiles.forEach(function(tile){
+            if(queryX == tile[0] || queryY == tile[1]){
+                window.location.href = '/question/' + num
+            }     
+        })
+    }
+
+    function random_tiles(){
+        x = Math.floor(Math.random() * 500)
+        y = Math.floor(Math.random() * 350)
+
+        x = Math.ceil(x/5) * 5
+        y = Math.ceil(y/5) * 5
+
+        return [x,y]
+    }
+
     function move(e){
 
         if(e.keyCode == 39){
@@ -61,6 +110,9 @@
         canvas.width = canvas.width;
         context.rect(xPos, yPos, 50,50)
         context.stroke()
+
+        check_tiles(xPos, yPos, tiles, questions)
+
     }
 
     // $("#canvas").keydown(function(e){

@@ -3,25 +3,118 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"> </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.44.0/codemirror.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.44.0/codemirror.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
 
+    <style>
+        body {
+            overflow: hidden;
+        }
 
-    {% for i in output %}
-    <p>
-       {{i}}
-    </p>
-    {% endfor %}
+        p {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+        }
 
-   
-    <pre>
-    <textarea id="editor" class="code">{{code}}</textarea>
-    </pre>
+        .monster {
+            width: 150px;
+            display: block;
+            margin: 0 auto;
+            
+        }
 
-    <div class="submit">submit code</div>
+        .CodeMirror {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+  
+        }
+
+        .CodeMirror-hscrollbar {
+            overflow-x: hidden;
+            
+        }
+
+        .CodeMirror-vscrollbar {
+            overflow-y: hidden
+        }
+
+        .monsterDisplay {
+            height: 250px;
+            border: 3px #F7F7F7 solid;
+            background-image: url('https://i.imgur.com/Uqx1bnT.png');
+            /* background-repeat: no-repeat; */
+            -webkit-filter: grayscale(100%);
+            filter: grayscale(100%);
+        }
+
+        .info {
+            height: 245px;
+            overflow-y: auto;
+            border: 3px #F7F7F7 solid;
+            background-color: #F7F7F7;
+            overflow-x: hidden;
+            padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
+            box-sizing: content-box; 
+        }
+
+        .row.no-pad {
+            margin-right:0;
+            margin-left:0;
+        }
+
+        .row.no-pad > [class*='col-'] {
+            padding-right:0;
+            padding-left:0;
+        }
+
+        .submit {
+            padding: 15px;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .flee {
+            padding: 15px;
+            font-family: 'Press Start 2P', cursive;
+        }
+       
+    
+    </style>
+    <div class='container-fluid'>
+        <div class='row justify-content-md-center'>
+            <h1 id="demo" class="center"></h1>
+        </div>
+        <div class='row no-pad'>
+            <div class ='col-md-4'>
+                <div class='monsterDisplay'>
+                    <img class="monster" src='https://i.imgur.com/pBvTOi6.png'/>
+                </div>
+                <div class='info'>
+                    {% for i in output %}
+                    <p>
+                    {{i}}
+                    </p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class ='col-md-6'>
+                <div class='editorScroll'>
+                    <textarea id="editor" class="code">{{code}}</textarea>
+                </div>
+            </div>
+        </div>
+        <div class='row justify-content-md-center'>
+            <div class="flee">RUN AWAY</div>
+            <div class="submit">TEST</div>
+            <div class="submit">SUBMIT</div>
+        </div>
+    </div>
 
     <script>
     var editor = CodeMirror.fromTextArea(document.getElementById("editor"),{
         lineNumbers: true
     });
+
+    editor.setSize('1000', '500')
 
     $(function() {
         $(".submit").on("click", function() {
@@ -36,6 +129,42 @@
             })
         })
     })
+
+    $(function() {
+        $(".flee").on("click", function() {
+            window.location.href = '/board' 
+        })
+    })
+
+
+    var time_in_minutes = 5;
+    var current_time = Date.parse(new Date());
+    var deadline = new Date(current_time + time_in_minutes*60*1000);
+
+    // Update the count down every 1 second
+    var x = setInterval(function() {
+
+    // Get todays date and time
+   
+
+    // Find the distance between now and the count down date
+    var t = Date.parse(deadline) - Date.parse(new Date());
+
+    // Time calculations for days, hours, minutes and seconds
+    var minutes = Math.floor( (t/1000/60) % 60 );    
+    var seconds = Math.floor( (t/1000) % 60 );
+	
+
+    // Display the result in the element with id="demo"
+    document.getElementById("demo").innerHTML = minutes + "m " + seconds + "s ";
+
+    // If the count down is finished, write some text 
+    if (seconds < 0) {
+        clearInterval(x);
+        document.getElementById("demo").innerHTML = "EXPIRED";
+    }
+    }, 1000);
+
     </script>
 </body>
 </html>
