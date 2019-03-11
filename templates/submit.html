@@ -42,7 +42,7 @@
             height: 250px;
             border: 3px #F7F7F7 solid;
             background-image: url('https://i.imgur.com/Uqx1bnT.png');
-            /* background-repeat: no-repeat; */
+            background-repeat: no-repeat;
             -webkit-filter: grayscale(100%);
             filter: grayscale(100%);
         }
@@ -79,6 +79,7 @@
        
     
     </style>
+
     <div class='container-fluid'>
         <div class='row justify-content-md-center'>
             <h1 id="demo" class="center"></h1>
@@ -136,8 +137,26 @@
         })
     })
 
+    function findDifficulty(){
+        var find = '{{output}}'
+        time_in_minutes = 0
 
-    var time_in_minutes = 5;
+        if(find.search('Easy') != -1) {
+            time_in_minutes = 15
+        }
+
+        if(find.search('Medium') != -1) {
+            time_in_minutes = 30
+        }
+        
+        if(find.search('Hard') != -1) {
+            time_in_minutes = 60
+        }
+
+        return time_in_minutes
+    }
+
+    var time_in_minutes = findDifficulty()
     var current_time = Date.parse(new Date());
     var deadline = new Date(current_time + time_in_minutes*60*1000);
 
