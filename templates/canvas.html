@@ -38,11 +38,11 @@
     }
 
     var questions = '{{questions}}'
-
     questions = questions.split(' ')
-
     questions = clean_up(questions)
 
+
+    // function for converting incoming question for leetcode api to be usable 
 
     function clean_up(arr){
         new_arr = []
@@ -53,8 +53,20 @@
         return new_arr
     }
 
-    // console.log(questions)
-    
+    // function for creating random question tiles on the board
+
+    function random_tiles(){
+        x = Math.floor(Math.random() * 500)
+        y = Math.floor(Math.random() * 350)
+
+        x = Math.ceil(x/5) * 5
+        y = Math.ceil(y/5) * 5
+
+        return [x,y]
+    }
+
+    // function for checking if user's rectangle overlaps with a question tile
+
     function check_tiles(queryX, queryY, tiles, questions){
         r = Math.floor(Math.random() * 4)
         num = questions[r]
@@ -67,15 +79,8 @@
         })
     }
 
-    function random_tiles(){
-        x = Math.floor(Math.random() * 500)
-        y = Math.floor(Math.random() * 350)
 
-        x = Math.ceil(x/5) * 5
-        y = Math.ceil(y/5) * 5
-
-        return [x,y]
-    }
+    // function for moving across the board. Check if user's current position matches a question tile 
 
     function move(e){
 
@@ -114,10 +119,6 @@
         check_tiles(xPos, yPos, tiles, questions)
 
     }
-
-    // $("#canvas").keydown(function(e){
-    //     move(e)
-    // })
 
     document.onkeydown = move
 
